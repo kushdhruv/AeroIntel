@@ -174,3 +174,40 @@ def _to_png_bytes(array: np.ndarray) -> bytes:
     stream = io.BytesIO()
     Image.fromarray(array).save(stream, format="PNG")
     return stream.getvalue()
+
+
+def create_sample_scenes(
+    target_dir: Path, num_scenes: int = 6, size: int = 1024, seed: int = 42
+) -> None:
+    """Generate realistic LEVIR-style 1024x1024 aerial scenes in A/, B/, label/ directories."""
+    dir_a = target_dir / "A"
+    dir_b = target_dir / "B"
+    dir_label = target_dir / "label"
+    dir_a.mkdir(parents=True, exist_ok=True)
+    dir_b.mkdir(parents=True, exist_ok=True)
+    dir_label.mkdir(parents=True, exist_ok=True)
+
+    rng = np.random.default_rng(seed)
+    for i in range(num_scenes):
+        scene_name = f"scene_{i:03d}.png"
+        base: Any = rng.integers(25, 60, (size, size, 3), dtype=np.uint8)
+        after: Any = base.copy()
+        mask: Any = np.zeros((size, size), dtype=np.uint8)
+
+        num_buildings = int(rng.integers(8, 16))
+        for _ in range(num_buildings):
+            y = int(rng.integers(30, size - 120))
+            x = int(rng.integers(30, size - 120))
+            h = int(rng.integers(40, 90))
+            w = int(rng.integers(40, 90))
+            color: Any = rng.integers(180, 240, (h, w, 3), dtype=np.uint8)
+            if rng.random() > 0.5:
+                base[y : y + h, x : x + w] = color
+                after[y : y + h, x : x + w] = color
+            else:
+                after[y : y + h, x : x + w] = color
+                mask[y : y + h, x : x + w] = 255
+
+        Image.fromarray(base).save(dir_a / scene_name, format="PNG")
+        Image.fromarray(after).save(dir_b / scene_name, format="PNG")
+        Image.fromarray(mask).save(dir_label / scene_name, format="PNG")

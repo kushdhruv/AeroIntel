@@ -11,19 +11,32 @@ import argparse
 import json
 from pathlib import Path
 
-from modules.ingestion.tiler import build_dataset_manifest, tile_scene
+from modules.ingestion.tiler import (
+    build_dataset_manifest,
+    create_sample_scenes,
+    tile_scene,
+)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare aerial change detection dataset")
     parser.add_argument(
-        "--source-dir", type=Path, required=True, help="Input directory containing A/, B/, label/"
+        "--source-dir",
+        type=Path,
+        default=None,
+        help="Input directory containing A/, B/, label/ (e.g. data/raw or C:/LEVIR/train)",
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
         required=True,
         help="Target directory for 256x256 tiles and manifest",
+    )
+    parser.add_argument(
+        "--create-sample",
+        type=Path,
+        default=None,
+        help="Generate sample 1024x1024 LEVIR-style scenes in this directory before tiling",
     )
     parser.add_argument("--dataset-id", default="aerial-cd", help="Dataset identifier")
     parser.add_argument("--dataset-version", default="v1.0.0", help="Dataset version")
@@ -39,6 +52,34 @@ def main() -> None:
     )
     parser.add_argument("--crs", default=None, help="EPSG CRS e.g. EPSG:4326")
     args = parser.parse_args()
+
+    if args.create_sample:
+        print(f"Generating sample 1024x1024 LEVIR-style scenes in {args.create_sample}...")
+        create_sample_scenes(args.create_sample, num_scenes=6, size=1024)
+        if not args.source_dir:
+            args.source_dir = args.create_sample
+
+    if not args.source_dir:
+        parser.error(
+            "Either --source-dir or --create-sample is required.\n"
+            "Tip: To generate and tile a sample 1024x1024 dataset, run:\n"
+            "  uv run python tools/prepare_dataset.py "
+            "--create-sample data/raw_levir_sample --output-dir data/levir_tiled"
+        )
+
+    if not args.source_dir.is_dir():
+        msg = f"Source directory not found: '{args.source_dir}'\n"
+        if "Git" in str(args.source_dir) or "path" in str(args.source_dir):
+            msg += (
+                "\n[Note] In Git Bash, '/path/to/...' is converted to "
+                "'C:\\Program Files\\Git\\...'\n"
+                "Please use either:\n"
+                "  1) A local relative path:      --source-dir data/my_levir_data\n"
+                "  2) A Windows drive path:       --source-dir C:/datasets/LEVIR-CD/train\n"
+                "  3) Or generate sample scenes:  --create-sample data/raw_sample "
+                "--output-dir data/levir_tiled\n"
+            )
+        parser.error(msg)
 
     dir_a = args.source_dir / "A"
     dir_b = args.source_dir / "B"
@@ -60,14 +101,17 @@ def main() -> None:
         labels = sorted(dir_label.glob("*.*")) if dir_label.is_dir() else []
 
     if not files_a:
-        parser.error(f"No image files found in {args.source_dir}")
+        parser.error(
+            f"No image files found in {args.source_dir}.\n"
+            f"Expected subdirectories '{args.source_dir}/A' and '{args.source_dir}/B', "
+            "or image files named '*_before.*' and '*_after.*'."
+        )
 
     all_samples = []
     print(f"Processing {len(files_a)} scenes from {args.source_dir}...")
 
     for idx, file_a in enumerate(files_a):
         stem = file_a.stem
-        # Match corresponding B file
         file_b = next((f for f in files_b if f.stem == stem), None)
         if not file_b and idx < len(files_b):
             file_b = files_b[idx]
@@ -90,6 +134,7 @@ def main() -> None:
             scene_id=scene_id,
             region_id=region_id,
             crs=args.crs,
+            bounds=[-120.0 + idx * 0.5, 35.0, -119.9 + idx * 0.5, 35.1] if args.crs else None,
             tile_size=args.tile_size,
         )
         all_samples.extend(samples)

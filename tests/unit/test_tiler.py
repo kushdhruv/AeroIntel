@@ -70,3 +70,13 @@ def test_tiler_slices_scene_and_builds_valid_manifest(tmp_path: Path) -> None:
     validate_contract("dataset-manifest", manifest)
     assert manifest["dataset_id"] == "test-aerial"
     assert len(manifest["samples"]) == 4
+
+
+def test_create_sample_scenes(tmp_path: Path) -> None:
+    from modules.ingestion.tiler import create_sample_scenes
+
+    raw_dir = tmp_path / "raw_levir"
+    create_sample_scenes(raw_dir, num_scenes=2, size=512)
+    assert (raw_dir / "A" / "scene_000.png").exists()
+    assert (raw_dir / "B" / "scene_000.png").exists()
+    assert (raw_dir / "label" / "scene_000.png").exists()
