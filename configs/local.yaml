@@ -1,0 +1,6 @@
+contract_version: 1.0.0
+execution_mode: local
+home: data/platform
+quality_policy_path: null
+patch_size: 256
+cloud_execution_enabled: false

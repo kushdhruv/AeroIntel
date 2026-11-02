@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-02",
+  "command": "uv tool run --from checkov==3.4.2 checkov --directory infrastructure/terraform --framework terraform --quiet --output json",
+  "summary": {
+    "passed": 58,
+    "failed": 0,
+    "skipped": 11,
+    "parsing_errors": 0,
+    "resource_count": 21,
+    "checkov_version": "3.4.2"
+  },
+  "failed_checks": [],
+  "exception_details": "Inline checkov:skip comments in Terraform; docs/aws.md and docs/threat-model.md explain all 11 demo exceptions."
+}

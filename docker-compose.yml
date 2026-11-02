@@ -1,0 +1,24 @@
+services:
+  api:
+    build:
+      context: .
+      target: api
+    ports: ["127.0.0.1:8000:8000"]
+    volumes:
+      - ./data:/app/data
+    environment:
+      AEROINTEL_HOME: /app/data/platform
+      AEROINTEL_IDENTITIES: ${AEROINTEL_IDENTITIES:-{}}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  mlflow:
+    build:
+      context: .
+      target: tracking
+    profiles: [tracking]
+    ports: ["127.0.0.1:5000:5000"]
+    volumes: ["./data:/app/data"]
+    command: ["mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:////app/data/platform/objects/experiments/mlflow.db"]

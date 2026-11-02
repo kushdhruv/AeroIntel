@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:aerointel:evaluation-report:1.0.0",
+  "title": "evaluation-report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evaluation_id",
+    "dataset_id",
+    "dataset_version",
+    "model_id",
+    "model_version",
+    "created_at",
+    "policy_id",
+    "geographic_metadata_available",
+    "split_assignment_sha256",
+    "splits",
+    "leakage",
+    "decision",
+    "reasons",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "evaluation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dataset_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "policy_id": {
+      "const": "geoleak-v1"
+    },
+    "geographic_metadata_available": {
+      "type": "boolean"
+    },
+    "split_assignment_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "splits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "random",
+        "scene",
+        "spatial"
+      ],
+      "properties": {
+        "random": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "iou",
+                "f1",
+                "precision",
+                "recall",
+                "test_samples"
+              ],
+              "properties": {
+                "iou": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "f1": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "precision": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "recall": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "test_samples": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scene": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "iou",
+                "f1",
+                "precision",
+                "recall",
+                "test_samples"
+              ],
+              "properties": {
+                "iou": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "f1": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "precision": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "recall": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "test_samples": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "spatial": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "iou",
+                "f1",
+                "precision",
+                "recall",
+                "test_samples"
+              ],
+              "properties": {
+                "iou": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "f1": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "precision": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "recall": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "test_samples": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "leakage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duplicate_pairs",
+        "scene_leaks",
+        "overlapping_tiles",
+        "overlap_check_status"
+      ],
+      "properties": {
+        "duplicate_pairs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scene_leaks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "overlapping_tiles": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "overlap_check_status": {
+          "enum": [
+            "completed",
+            "unavailable"
+          ]
+        }
+      }
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "REVIEW_REQUIRED"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "geographic_metadata_available": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "splits": {
+            "properties": {
+              "spatial": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+schema_version: 1.0.0
+default: deny
+tools:
+  get_pipeline_status: {role: reader, effect: read}
+  list_model_versions: {role: reader, effect: read}
+  get_geoleak_report: {role: reader, effect: read}
+  get_drift_report: {role: reader, effect: read}
+  create_retraining_proposal: {role: operator, effect: proposal, require_idempotency_key: true}
+  request_model_promotion: {role: operator, effect: request, require_idempotency_key: true}
+promotion:
+  approver_role: approver
+  require_human_identity: true
+  require_artifact_checksum: true
+  require_quality_gate_pass: true
+  require_matching_dataset_and_model_versions: true
+  approval_bound_to: [model_id, model_version, artifact_sha256, evaluation_id, policy_id]
+audit:
+  record_allowed_and_denied: true
+  fields: [actor_id, operation, target, request_id, timestamp, decision, reason]
+# The ModelOps backend loads these allowlisted roles before validating tool actions.

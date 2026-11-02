@@ -1,0 +1,142 @@
+{
+  "run_id": "d384032f-04b3-41aa-a913-1f9ecc65e12b",
+  "pipeline_state": "COMPLETED",
+  "evaluation": {
+    "created_at": "2026-11-02T16:10:26.314148Z",
+    "dataset_id": "synthetic-buildings",
+    "dataset_version": "seed-17",
+    "decision": "PASS",
+    "evaluation_id": "d384032f-04b3-41aa-a913-1f9ecc65e12b",
+    "geographic_metadata_available": true,
+    "leakage": {
+      "duplicate_pairs": 0,
+      "overlap_check_status": "completed",
+      "overlapping_tiles": 0,
+      "scene_leaks": 0
+    },
+    "limitations": [
+      "Synthetic fixtures establish software behavior only"
+    ],
+    "model_id": "propertypulse",
+    "model_version": "d384032f-04b3-41aa-a913-1f9ecc65e12b",
+    "policy_id": "geoleak-v1",
+    "reasons": [],
+    "schema_version": "1.0.0",
+    "split_assignment_sha256": "sha256:82c4162c8729099d1959e5db5fe8e6dd8806abcf89ff87134e7495c98c5470cb",
+    "splits": {
+      "random": {
+        "f1": 0.9984864864864865,
+        "iou": 0.9969775474956822,
+        "precision": 1.0,
+        "recall": 0.9969775474956822,
+        "test_samples": 4
+      },
+      "scene": {
+        "f1": 0.9993704092339979,
+        "iou": 0.9987416107382551,
+        "precision": 1.0,
+        "recall": 0.9987416107382551,
+        "test_samples": 4
+      },
+      "spatial": {
+        "f1": 0.9967098047817504,
+        "iou": 0.9934411893310013,
+        "precision": 1.0,
+        "recall": 0.9934411893310013,
+        "test_samples": 4
+      }
+    }
+  },
+  "synthetic_only": true,
+  "model_key": "propertypulse:d384032f-04b3-41aa-a913-1f9ecc65e12b",
+  "deployment": {
+    "deployment_id": "a3122385-037d-47a5-82d5-868b5e461067",
+    "model_key": "propertypulse:d384032f-04b3-41aa-a913-1f9ecc65e12b",
+    "previous_key": null,
+    "started_at": "2026-11-02T16:10:26.458620Z",
+    "canary_type": "local_replay",
+    "status": "active"
+  },
+  "reference_replay_monitoring": {
+    "schema_version": "1.0.0",
+    "report_id": "37cfce7c-bb7c-4390-a361-b0cce893f4ae",
+    "model_id": "propertypulse",
+    "model_version": "d384032f-04b3-41aa-a913-1f9ecc65e12b",
+    "created_at": "2026-11-02T16:10:32.724188Z",
+    "reference_dataset_version": "seed-17",
+    "window_start": "2020-01-01T00:00:00Z",
+    "window_end": "2026-11-02T16:10:28.412300Z",
+    "input_shift": "not_detected",
+    "regional_prediction_shift": [
+      {
+        "region_id": "synthetic-region-0",
+        "status": "insufficient_data"
+      },
+      {
+        "region_id": "synthetic-region-1",
+        "status": "insufficient_data"
+      },
+      {
+        "region_id": "synthetic-region-2",
+        "status": "insufficient_data"
+      },
+      {
+        "region_id": "synthetic-region-3",
+        "status": "insufficient_data"
+      },
+      {
+        "region_id": "synthetic-region-4",
+        "status": "insufficient_data"
+      },
+      {
+        "region_id": "synthetic-region-5",
+        "status": "insufficient_data"
+      }
+    ],
+    "performance": {
+      "status": "stable",
+      "label_count": 24,
+      "iou": 0.9930637544273908,
+      "f1": 0.9965198074787116
+    },
+    "evidently_report_uri": "monitoring/37cfce7c-bb7c-4390-a361-b0cce893f4ae/evidently.json",
+    "investigation_required": false
+  },
+  "shifted_monitoring": {
+    "schema_version": "1.0.0",
+    "report_id": "2dbce1cc-0139-4061-8173-bc955d5c4494",
+    "model_id": "propertypulse",
+    "model_version": "d384032f-04b3-41aa-a913-1f9ecc65e12b",
+    "created_at": "2026-11-02T16:10:33.502622Z",
+    "reference_dataset_version": "seed-17",
+    "window_start": "2026-11-02T16:10:32.740068Z",
+    "window_end": "2026-11-02T16:10:33.217109Z",
+    "input_shift": "detected",
+    "regional_prediction_shift": [
+      {
+        "region_id": "synthetic-region-0",
+        "status": "insufficient_data"
+      },
+      {
+        "region_id": "synthetic-region-1",
+        "status": "insufficient_data"
+      }
+    ],
+    "performance": {
+      "status": "missing_labels",
+      "label_count": 0,
+      "iou": null,
+      "f1": null
+    },
+    "evidently_report_uri": "monitoring/2dbce1cc-0139-4061-8173-bc955d5c4494/evidently.json",
+    "investigation_required": true
+  },
+  "retraining_proposal": {
+    "proposal_id": "cad32654-c242-45de-971c-dc3e1e84db34",
+    "model_key": "propertypulse:d384032f-04b3-41aa-a913-1f9ecc65e12b",
+    "type": "create_retraining_proposal",
+    "state": "proposed",
+    "reason": "Investigation required by drift report 2dbce1cc-0139-4061-8173-bc955d5c4494"
+  },
+  "audit_events": 35
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "synthetic-example",
+  "dataset_version": "v001",
+  "source": "synthetic-contract-example",
+  "usage_terms": {"status": "unverified", "reference": null},
+  "split_policy": "scene_group_holdout",
+  "samples": [
+    {
+      "sample_id": "example-001",
+      "source_scene_id": "source-scene-001",
+      "image_pair": {"before": "data/t1/example.tif", "after": "data/t2/example.tif"},
+      "mask": null,
+      "metadata": {
+        "region_id": null,
+        "crs": null,
+        "bounds": null,
+        "acquisition_before": null,
+        "acquisition_after": null
+      },
+      "checksum": {
+        "before": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "after": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "mask": null
+      }
+    }
+  ]
+}

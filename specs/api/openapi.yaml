@@ -1,0 +1,780 @@
+openapi: 3.1.0
+info:
+  title: AeroIntel
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      tags:
+      - health
+      summary: Health
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Health Health Get
+  /datasets:
+    post:
+      tags:
+      - ingestion
+      summary: Ingest
+      operationId: ingest_datasets_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ingest Datasets Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /pipelines:
+    post:
+      tags:
+      - pipeline
+      summary: Submit
+      operationId: submit_pipelines_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                title: Response Submit Pipelines Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /pipelines/{run_id}/execute:
+    post:
+      tags:
+      - pipeline
+      summary: Execute
+      operationId: execute_pipelines__run_id__execute_post
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Run Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Execute Pipelines  Run Id  Execute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /pipelines/{run_id}:
+    get:
+      tags:
+      - pipeline
+      summary: Status
+      operationId: status_pipelines__run_id__get
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Run Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Status Pipelines  Run Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /models:
+    get:
+      tags:
+      - registry
+      summary: Versions
+      operationId: versions_models_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Versions Models Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /models/{key}/approve:
+    post:
+      tags:
+      - registry
+      summary: Approve
+      operationId: approve_models__key__approve_post
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Key
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Approve Models  Key  Approve Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /models/{key}/deploy:
+    post:
+      tags:
+      - deployment
+      summary: Deploy
+      operationId: deploy_models__key__deploy_post
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Key
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Deploy Models  Key  Deploy Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /deployments/rollback:
+    post:
+      tags:
+      - deployment
+      summary: Rollback
+      operationId: rollback_deployments_rollback_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Rollback Deployments Rollback Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /deployments:
+    get:
+      tags:
+      - deployment
+      summary: Deployments
+      operationId: deployments_deployments_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Deployments Deployments Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /predictions:
+    post:
+      tags:
+      - inference
+      summary: Inference
+      operationId: inference_predictions_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PredictionBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Inference Predictions Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /predictions/{prediction_id}/feedback:
+    post:
+      tags:
+      - monitoring
+      summary: Feedback
+      operationId: feedback_predictions__prediction_id__feedback_post
+      parameters:
+      - name: prediction_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Prediction Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                title: Response Feedback Predictions  Prediction Id  Feedback Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /monitoring:
+    post:
+      tags:
+      - monitoring
+      summary: Monitor
+      operationId: monitor_monitoring_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitorBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Monitor Monitoring Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /reports/{kind}/{key}:
+    get:
+      tags:
+      - reports
+      summary: Report
+      operationId: report_reports__kind___key__get
+      parameters:
+      - name: kind
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Kind
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Key
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Report Reports  Kind   Key  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /audit:
+    get:
+      tags:
+      - audit
+      summary: Audit
+      operationId: audit_audit_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response Audit Audit Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /modelops/{tool}:
+    post:
+      tags:
+      - modelops
+      summary: Modelops
+      operationId: modelops_modelops__tool__post
+      parameters:
+      - name: tool
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tool
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Modelops Modelops  Tool  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    FeedbackBody:
+      properties:
+        mask:
+          type: string
+          maxLength: 12000000
+          title: Mask
+      additionalProperties: false
+      type: object
+      required:
+      - mask
+      title: FeedbackBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    IngestBody:
+      properties:
+        manifest:
+          additionalProperties: true
+          type: object
+          title: Manifest
+        files:
+          additionalProperties:
+            type: string
+          type: object
+          maxProperties: 300
+          title: Files
+      additionalProperties: false
+      type: object
+      required:
+      - manifest
+      - files
+      title: IngestBody
+    MonitorBody:
+      properties:
+        model_key:
+          type: string
+          title: Model Key
+        start:
+          type: string
+          title: Start
+        end:
+          type: string
+          title: End
+      additionalProperties: false
+      type: object
+      required:
+      - model_key
+      - start
+      - end
+      title: MonitorBody
+    OperationBody:
+      properties:
+        request_id:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Request Id
+      additionalProperties: false
+      type: object
+      required:
+      - request_id
+      title: OperationBody
+    PredictionBody:
+      properties:
+        before:
+          type: string
+          maxLength: 12000000
+          title: Before
+        after:
+          type: string
+          maxLength: 12000000
+          title: After
+        region:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Region
+        request_id:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Request Id
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      additionalProperties: false
+      type: object
+      required:
+      - before
+      - after
+      - region
+      - request_id
+      title: PredictionBody
+    RunBody:
+      properties:
+        dataset_key:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Dataset Key
+        config:
+          $ref: '#/components/schemas/TrainingConfig'
+      additionalProperties: false
+      type: object
+      required:
+      - dataset_key
+      title: RunBody
+    ToolBody:
+      properties:
+        arguments:
+          additionalProperties: true
+          type: object
+          title: Arguments
+      additionalProperties: false
+      type: object
+      required:
+      - arguments
+      title: ToolBody
+    TrainingConfig:
+      properties:
+        epochs:
+          type: integer
+          maximum: 1000.0
+          minimum: 1.0
+          title: Epochs
+          default: 12
+        batch_size:
+          type: integer
+          maximum: 32.0
+          minimum: 1.0
+          title: Batch Size
+          default: 4
+        learning_rate:
+          type: number
+          maximum: 0.1
+          exclusiveMinimum: 0.0
+          title: Learning Rate
+          default: 0.01
+        seed:
+          type: integer
+          maximum: 4294967295.0
+          minimum: 0.0
+          title: Seed
+          default: 42
+        width:
+          type: integer
+          maximum: 32.0
+          minimum: 2.0
+          title: Width
+          default: 4
+        threshold:
+          type: number
+          exclusiveMaximum: 1.0
+          exclusiveMinimum: 0.0
+          title: Threshold
+          default: 0.5
+        block_meters:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Block Meters
+          default: 10000
+      additionalProperties: false
+      type: object
+      title: TrainingConfig
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

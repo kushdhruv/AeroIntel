@@ -1,0 +1,5 @@
+region                   = "ap-south-1"
+project                  = "aerointel"
+bucket_name              = "replace-with-your-globally-unique-bucket-name"
+enable_training_pipeline = false
+worker_image_uri         = ""

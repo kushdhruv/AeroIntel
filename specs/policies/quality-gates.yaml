@@ -1,0 +1,15 @@
+schema_version: 1.0.0
+policy_id: geoleak-v1
+# Initial policy targets, not measured results. Tune only with a recorded decision.
+minimum_metrics:
+  scene:
+    iou: 0.65
+    f1: 0.75
+  spatial:
+    iou: 0.60
+    f1: 0.70
+promotion:
+  required_decision: PASS
+  require_authorized_human_approval: true
+  missing_spatial_evaluation: REVIEW_REQUIRED
+  review_required_blocks_promotion: true
